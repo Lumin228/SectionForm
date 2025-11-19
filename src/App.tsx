@@ -8,8 +8,20 @@ import MovieGrid from './components/MovieGrid/MovieGrid';
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalStatus, setModalStatus] = useState<boolean>(false);
   const [topic, setTopic] = useState<string>("");
+  const [modalInfo, setModalInfo] = useState<Movie>();
+
+  const openModal = (e: number) => {
+    
+    setModalInfo(movies.find(movie => movie.id === e));
+    setModalStatus(true);
+    
+    
+  }
+  const closeModal = () => {
+    setModalStatus(false);
+  }
 
   useEffect(() => {
     async function load() {
@@ -25,8 +37,8 @@ function App() {
   return (
     <>
       <SearchBar onSubmit={setTopic} />
-      {movies.length > 0 ? <MovieGrid list={movies} /> : null}
-      {modalOpen == true ? <MovieModal /> : null}
+      {movies.length > 0 ? <MovieGrid list={movies} onClick={openModal} /> : null}
+      {modalStatus && <MovieModal onClose={closeModal} info={modalInfo}/>}
     </>
   );
 }
