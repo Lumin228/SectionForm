@@ -1,4 +1,9 @@
+import { Formik, Form, Field } from 'formik';
 import css from './SearchBar.module.css';
+interface initValues{
+    query: string;
+}
+
 
 interface SearchBarProps {
     onSubmit: (topic: string) => void;
@@ -6,10 +11,13 @@ interface SearchBarProps {
 
 function SearchBar({ onSubmit }: SearchBarProps) {
 
-    const handleSubmit = (formData: FormData) => {
-        const topic = formData.get('query') as string;
-        onSubmit(topic);
+    const handleSubmit = (values: initValues) => {
+        onSubmit(values.query);
     }
+
+    const initialValues: initValues = {
+        query: '',
+    };
 
     return (
         <header className={css.header}>
@@ -22,7 +30,23 @@ function SearchBar({ onSubmit }: SearchBarProps) {
                 >
                     Powered by ME
                 </a>
-                <form className={css.form} action={handleSubmit}>
+                <Formik initialValues={initialValues} onSubmit={(values) => handleSubmit(values)}>
+                    <Form className={css.form}>
+                    <Field
+                        className={css.input}
+                        type="text"
+                        name="query"
+                        autoComplete="off"
+                        placeholder="Search movies..."
+                        autoFocus
+                    />
+                    <button className={css.button} type="submit">
+                        Search
+                    </button>
+                    </Form>
+                </Formik>
+
+                {/* <form className={css.form} action={handleSubmit}>
                     <input
                         className={css.input}
                         type="text"
@@ -34,7 +58,7 @@ function SearchBar({ onSubmit }: SearchBarProps) {
                     <button className={css.button} type="submit">
                         Search
                     </button>
-                </form>
+                </form> */}
             </div>
         </header>
 
